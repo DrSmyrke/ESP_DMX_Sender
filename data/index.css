@@ -20,4 +20,10 @@ code, .code{
 			user-select: text; /* Non-prefixed version, currently */
 }
 
+header{
+	display: flex;
+	justify-content: space-between;
+}
 
+hr{ color: #ff0ff0; }
+hr.red{ color: #ff0000; }

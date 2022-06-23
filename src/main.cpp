@@ -5,12 +5,7 @@
 //------------------------- VARIABLES ------------------------------------------
 char tmpVal[ 10 ];
 char pageBuff[ WEB_PAGE_BUFF_SIZE ];
-
-#if defined(ARDUINO_ARCH_ESP8266)
-	ESP8266WebServer webServer;
-#elif defined(ARDUINO_ARCH_ESP32)
-	WebServer webServer;
-#endif
+ESP8266WebServer webServer;
 AppData appData;
 char tempBuff[ 32 ];
 
@@ -20,12 +15,11 @@ char tempBuff[ 32 ];
 void setup()
 {
 	pinMode( LED_BUILTIN, OUTPUT );
-	pinMode( D0, OUTPUT );
-	digitalWrite( D0, HIGH );	// Transmit mode
-	LittleFS.begin();
+	// pinMode( D0, OUTPUT );
+	// digitalWrite( D0, HIGH );	// Transmit mode
 
+	esp::init();
 
-	delay( 100 );
 	IPAddress apIP( 10, 10, 10, 10 );
 	bool res = esp::wifi_init( DEVICE_NAME, apIP, apIP, IPAddress( 255, 255, 255, 0 ) );
 	if( res ){
@@ -33,16 +27,11 @@ void setup()
 	}else{
 		digitalWrite( LED_BUILTIN, HIGH );
 	}
-
-
 	
 	delay( 100 );
 	esp::pageBuff = pageBuff;
 	esp::addWebServerPages( &webServer, true, true );
 	webServer.on( "/", handleRoot );
-	webServer.on( "/index.js", handleIndexJS );
-	webServer.on( "/index.css", handleIndexCSS );
-	webServer.on( "/favicon.ico", handleFavICO );
 	webServer.on( "/get", handleGet );
 	webServer.on( "/set", HTTP_POST, handleSet );
 	webServer.begin();

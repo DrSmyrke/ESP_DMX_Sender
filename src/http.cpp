@@ -1,44 +1,13 @@
 #include "http.h"
 #include "main.h"
 
-char page_buffer[ 1024 ];
-
-//-------------------------------------------------------------------
-bool AuthCheck()
-{
-	delay( 1000 );
-
-	// if( !webServer.authenticate( ADMIN_LOGIN, ADMIN_PASS ) ){
-	// 	webServer.requestAuthentication( DIGEST_AUTH, "Nordmann access", "authFail" );
-	// 	return false;
-	// }
-
-	return true;
-}
-
-//-------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 void handleRoot(void)
 {
 	esp::webSendFile( &webServer, "/index.html", "text/html" );
 }
 
 //-------------------------------------------------------------------------------
-void handleIndexJS(void)
-{
-	esp::webSendFile( &webServer, "/index.js", "text/javascript" );
-}
-
-//-------------------------------------------------------------------------------
-void handleIndexCSS(void)
-{
-	esp::webSendFile( &webServer, "/index.css", "text/css" );
-}
-
-//-------------------------------------------------------------------------------
-void handleFavICO(void)
-{
-	esp::webSendFile( &webServer, "/favicon.ico", "image/x-icon" );
-}
 
 //-------------------------------------------------------------------------------
 void handleGet(void)
@@ -81,6 +50,7 @@ void handleSet(void)
 		if( value > 255 ) value = 255;
 		if( channel > DMX_CHANNES ) value = DMX_CHANNES;
 		appData.channels[ channel - 1 ] = value;
+		ESP8266DMX0.setSlot( channel + 1, value );
 	}
 	//-------------------------------------------------------------
 	webServer.send ( 200, "text/html", "OK" );
